@@ -23,6 +23,8 @@ Namely, services can be configured to simulate service degradation by means of *
 
 **Launch the U-Store web app**
 
+- `cd` into `ecommerce` directory
+
 - Open a shell and execute the Python program: `manage.py runserver` (the default server address is `127.0.0.1:8000`). Alternatively, you can specify another server address as second parameter using the syntax `IP:port`; note that the IP must to be addedd to the the list of allowed host in the `setting.py`
 
 - Open in a browser the index page of the U-Store: http://127.0.0.1:8000/index.html
