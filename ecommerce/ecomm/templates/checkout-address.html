@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load ecomm_extras %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static '.\css\checkout.css' %}">
+
+<div>
+   <div class="box">
+      <h1>Checkout - Address</h1>
+      <ul class="nav nav-pills nav-justified">
+         <li class="active"><i class="fa fa-map-marker"></i><br>Address</a></li>
+         <li class="disabled"><a href="#"><i class="fa fa-money disabled"></i><br><span class="disabled">Payment Method</span></a></li>
+         <li class="disabled"><a href="#"><i class="fa fa-eye disabled"></i><br><span class="disabled">Order Review</span></a></li>
+      </ul>
+      <div class="content">
+         <div class="check-row">
+            <div class="check-col-sm-6">
+               <div class="form-group">
+				  <input type="hidden" class="form-control" id="id_address" value="{{ad.0.pk}}">
+                  <label for="firstname">Firstname</label>
+                  <input type="text" class="form-control" id="firstname" value="{{ad.0.fields.Firstname}}">
+               </div>
+            </div>
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="lastname">Lastname</label>
+                  <input type="text" class="form-control" id="lastname" value="{{ad.0.fields.Lastname}}">
+               </div>
+            </div>
+         </div>
+         <!-- /.row -->
+         <div class="check-row">
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="company">Company</label>
+                  <input type="text" class="form-control" id="company" value="{{ad.0.fields.Company}}">
+               </div>
+            </div>
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="street">Street</label>
+                  <input type="text" class="form-control" id="street" value="{{ad.0.fields.Street}}">
+               </div>
+            </div>
+         </div>
+         <!-- /.row -->
+         <div class="check-row">
+            <div class="check-col-sm-6 col-md-3">
+               <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" id="city" value="{{ad.0.fields.City}}">
+               </div>
+            </div>
+            <div class="check-col-sm-6 check-col-md-3">
+               <div class="form-group">
+                  <label for="zip">ZIP</label>
+                  <input type="text" class="form-control" id="zip" value="{{ad.0.fields.Zip}}">
+               </div>
+            </div>
+			 <div class="check-col-sm-6 check-col-md-3">
+               <div class="form-group">
+                  <label for="country">Province</label>
+                  <input type="text" class="form-control" id="province" value="{{ad.0.fields.Province}}">
+               </div>
+            </div>
+            <div class="check-col-sm-6 check-col-md-3">
+               <div class="form-group">
+                  <label for="state">State</label>
+                  <input type="text" class="form-control" id="state" value="{{ad.0.fields.State}}">
+               </div>
+            </div>          
+		</div>
+		<div class="check-row">
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="phone">Telephone</label>
+                  <input type="text" class="form-control" id="phone" value="{{ad.0.fields.Phone}}">
+               </div>
+            </div>
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" class="form-control" id="email" value="{{ad.0.fields.Mail}}">
+               </div>
+            </div>
+         </div>
+         <!-- /.row -->
+      </div>
+   </div>
+   <!-- right box -->
+   <div class="col-md-3">
+      <div class="box" id="order-summary">
+         <div class="box-header">
+            <h3>Order summary</h3>
+         </div>
+         <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+         <div class="table-responsive">
+            <table class="table">
+               <tbody>
+                  <tr>
+                     <td>Order subtotal</td>
+                     <th>{{user.currency.symbol}}{{user.subtotal_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr>
+                     <td>Tax</td>
+                     <th>{{user.currency.symbol}}{{user.tax_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr>
+                     <td>Shipping and handling</td>
+                     <th>{{user.currency.symbol}}{{user.shipping_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr class="total">
+                     <td>Total</td>
+                     <th>{{user.currency.symbol}}{{user.total_basket|floatformat:2}}</th>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="box-footer">
+      <div class="left">
+         <button type="buttom" class="button" id="home-basket" onclick="location.href='/basket.html'"><i class="fa fa-arrow-circle-left"></i> Back to basket</button>
+      </div>
+      <div class="right">
+         <button type="buttom" class="button" id="checkout-payment-order"  onclick="saveAddress();">Continue to Payment Method<i class="fa fa-arrow-circle-right"></i>
+         </button>
+      </div>
+   </div>
+</div>
+{% endblock %}

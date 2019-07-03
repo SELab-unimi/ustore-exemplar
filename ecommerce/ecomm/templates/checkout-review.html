@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load ecomm_extras %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static '.\css\checkout.css' %}">
+
+<div>
+   <div class="box">
+      <h1>Checkout - Review</h1>
+      <ul class="nav nav-pills nav-justified">
+         <li class="active"><a href="/checkout-address.html"><i class="fa fa-map-marker"></i><br>Address</a></li>
+         <li class="active"><a href="/checkout-payment.html"><i class="fa fa-money disabled"></i><br>Payment Method</a></li>
+         <li class="active"><a href="#"><i class="fa fa-eye disabled"></i><br><span class="disabled">Order Review</span></a></li>
+      </ul>
+      <div class="table-responsive">
+		<table class="table tbasket">
+			<thead>
+				<tr>
+					<th colspan="2">Product</th>
+					<th>Quantity</th>
+					<th>Unit price</th>
+					<th>Discount</th>
+					<th>Total</th>
+					<th />
+				</tr>
+			</thead>
+			<tbody>
+				{% for basket in user.basket %}
+					<tr class="row-basket">
+						<td>
+								{% with 'img/'|add:basket.fields.ID_Product.PictureProductName as image_static %}
+									<img class="img-price" src="{% static image_static %}/1.jpg" />
+								{% endwith %}
+						</td>
+						<td><a href="./product.html?op=product&id={{basket.pk}}">{{basket.fields.ID_Product.NameProduct}}</a>
+						</td>
+						<td>{{basket.fields.Quantity}}</td>
+						<td>{{user.currency.symbol}}{{basket.fields.ID_Product.Price}}</td>
+						<td>{{basket.fields.ID_Product.Sale}}%</td>
+						<td>{{user.currency.symbol}}{{basket.fields.ID_Product.Tot|floatformat:2}}</td>
+						<td></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="5">Total</th>
+					<th colspan="2">{{user.currency.symbol}}{{user.sum_basket|floatformat:2}}</th>
+				</tr>
+			</tfoot>
+		</table>
+    </div>
+	</div>
+   <!-- right box -->
+   <div class="col-md-3">
+      <div class="box" id="order-summary">
+         <div class="box-header">
+            <h3>Order summary</h3>
+         </div>
+         <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+         <div class="table-responsive">
+            <table class="table">
+               <tbody>
+                  <tr>
+                     <td>Order subtotal</td>
+                     <th>{{user.currency.symbol}}{{user.subtotal_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr>
+                     <td>Tax</td>
+                     <th>{{user.currency.symbol}}{{user.tax_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr>
+                     <td>Shipping and handling</td>
+                     <th>{{user.currency.symbol}}{{user.shipping_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr class="total">
+                     <td>Total</td>
+                     <th>{{user.currency.symbol}}{{user.total_basket|floatformat:2}}</th>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="box-footer">
+      <div class="left">
+         <button type="buttom" class="button" id="checkout-address" onclick="location.href='/checkout-address.html'"><i class="fa fa-arrow-circle-left"></i> Back to Payment Method</button>
+      </div>
+      <div class="right">
+         <button type="buttom" class="button" id="place-order"  onclick="location.href='/place-order.html'">Palce an Order <i class="fa fa-arrow-circle-right"></i>
+         </button>
+      </div>
+   </div>
+</div>
+{% endblock %}

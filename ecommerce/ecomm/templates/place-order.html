@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load ecomm_extras %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static '.\css\checkout.css' %}">
+
+<div>
+   <div class="box">
+      <h1>Order Sent</h1>
+	  <div id="thanks-msg" class="thanks">
+		  <h3> Thanks for your order</h3>
+		  <p> A mail will be sent when your order will be shipped</p>
+	  </div>
+   </div>
+   <div class="box-footer">
+      <div class="left">
+         <button type="buttom" class="button" id="back_home" onclick="location.href='/'"><i class="fa fa-arrow-circle-left"></i> Back to Home</button>
+      </div>
+   </div>
+</div>
+{% endblock %}

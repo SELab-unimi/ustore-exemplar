@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+{% load ecomm_extras %}
+<html>
+			<head>
+							{% load static %}
+				<link rel="stylesheet" type="text/css" href="{% static '.\css\index.css' %}">
+				<link rel="stylesheet" type="text/css" href="{% static '.\css\font-awesome.css' %}">
+				<link rel="icon" href="{% static '.\img\favicon.ico' %}" type="image/x-icon"/>
+				<title>U-Shop</title>
+			</head>
+	<body>
+	<div class="wrapper">
+		<div class="header flex-container">
+			<header>
+				<div class="top-header">
+					<div class="pull-left">Welcome to UShop!</div>
+					<div class="pull-right">
+						<ul class="header-top-links">
+							<li><a href="#"  rel="noreferrer">Store</a></li>
+							<li><a href="#"  rel="noreferrer">Newsletter</a></li>
+							<li><a href="#"  rel="noreferrer">FAQ</a></li>
+							<li class="header-lng dropdown default-dropdown {{usr.class}}">
+								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="show_lng" onclick="show('header-lng');event.preventDefault();">{{user.language.symbol}} <i class="fa fa-caret-down"></i></a>
+								<ul class="custom-menu lng">
+									{% for lng in user.lngs %}
+										<li><a href="#" onclick="javascript:send('', {'op': 'setLanguage', 'id_lng': {{lng.pk}}})">{{lng.fields.Name}} ({{lng.fields.Symbol}})</a></li>
+									{% endfor %}
+								</ul>
+							</li>
+							<li class="header-cur dropdown default-dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="show_cur" onclick="show('header-cur');event.preventDefault();">{{user.currency.name}} <i class="fa fa-caret-down"></i></a>
+								<ul class="custom-menu cur">
+									{% for cur in user.curs %}
+										<li><a href="#" onclick="javascript:send('', {'op': 'setCurrency', 'id_cur': {{cur.pk}}})">{{cur.fields.Name}} ({{cur.fields.Symbol}})</a></li>
+									{% endfor %}
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="bottom-header">
+					<div class="pull-left title"><a href='./index.html' rel="noreferrer">U-Shop</a></div>
+					<div class="pull-right">
+					<ul class="header-btns">
+							<!-- Account -->
+							<li class="header-account dropdown default-dropdown">
+								<div class="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true" id="show-usr" onclick="show('header-account');">
+									<div class="header-btns-icon">
+										<i class="fa fa-user-o"></i>
+									</div>
+
+									<strong class="text-uppercase">My Account {% if user.is_logged %} <i class="fa fa-caret-down {{ user.class }}"></i>{% endif %}</strong>
+								</div>
+								{% if not user.is_logged %}<div class="usr-logged "><a id="open-login" onclick="openLogin()" class="text-uppercase">Sign in</a> / <a id="open-reg" onclick="openRegister()" class="text-uppercase">Register</a></div> {% else %}
+								<div class="">{{ user.name }}</div>
+
+								<ul class="custom-menu usr {{ user.class }}">
+									<li><a ><i class="fa fa-user-o"></i> My Account</a></li>
+									<li><a href="#" rel="noreferrer"><i class="fa fa-heart-o"></i> My Wishlist</a></li>
+									<li><a href="#" rel="noreferrer"><i class="fa fa-exchange"></i> Compare</a></li>
+									<li><a id="checkout" href="{% if user.is_logged and user.count_basket > "0" %}./checkout-address.html{% endif %}"><i class="fa fa-check"></i> Checkout</a></li>
+									<li><a id="logout" href="#" onclick="javascript:send('/', {'op': 'logout'});"><i class="fa fa-logout"></i> Logout</a></li>
+								</ul>
+								{% endif %}
+							</li>
+							<!-- /Account -->
+
+							<!-- Cart -->
+							<li class="header-cart dropdown default-dropdown" >
+								<a id="cart-dropdown" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" {% if user.is_logged and user.count_basket > "0" %} onclick="show('header-cart');event.preventDefault();"{% endif %}>
+									<div class="header-btns-icon">
+										<i class="fa fa-shopping-cart"></i>
+										{% if user.is_logged %}<span class="qty">{{user.count_basket}}</span>{% endif %}
+									</div>
+									{% if user.is_logged %}<strong class="text-uppercase">My Basket:</strong>
+									<br>
+									<span> {{user.currency.symbol}}{{user.sum_basket|floatformat:2}}</span>{% endif %}
+								</a>
+								<!-- menu cart -->
+								<div class="custom-menu basket" >
+									<div id="shopping-cart">
+										<div class="shopping-cart-list">
+											{% for basket in user.basket %}
+											<div class="product product-widget">
+												<div class="product-thumb">
+													{% with 'img/'|add:basket.fields.ID_Product.PictureProductName as image_static %}
+														<img class="img-price" src="{% static image_static %}/1.jpg" />
+													{% endwith %}
+												</div>
+												<div class="product-body" id="widget-prd" onclick="location.href='./product.html?op=product&id={{basket.pk}}'">
+													<h3 class="product-price">{{user.currency.symbol}}{{basket.fields.ID_Product.Tot|floatformat:2}} <span class="qty">x{{basket.fields.Quantity}}</span></h3>
+													<h2 class="product-name"><a href="#">{{basket.fields.ID_Product.NameProduct}}</a></h2>
+												</div>
+												<button class="cancel-btn" id="remove-prd" onclick="javascript:send('', {'op': 'removePrd', 'id': {{basket.pk}}})"><i class="fa fa-trash"></i></button>
+											</div>
+											{% endfor %}
+										</div>
+										<div class="shopping-cart-btns">
+											<button class="widget-button" id="view-basket" onclick="location.href='./basket.html'">Basket</button>
+											<button class="widget-button" id="do-checkout" onclick="location.href='./checkout-address.html'">Checkout <i class="fa fa-arrow-circle-right"></i></button>
+										</div>
+									</div>
+								</div>
+								<!-- End menu cart -->
+							</li>
+						</ul>
+					</div>
+				</div>
+			</header>
+		</div>
+		<section class="content">
+			<div class="cont-login">
+				<div class="overlap"></div>
+				<div class="login">
+					<i id="close-login" class="fa fa-exit" onclick="closeLogin()"></i>
+					<div class="title-login-reg">Sign in</div>
+					<div class="content-login">
+						<form action="" method="POST">
+							<input class="input" 	id="s-user" 	name="username" placeholder="Username/E-mail" type="text" value="">
+							<input class="input" 	id="s-password" name="password" placeholder="Password" type="password" value="">
+							<input class="input" 	id="s-op" 		name="op" type="hidden" value="login">
+							<input class="button" 	id="s-ok-login" type="submit" value="SIGN IN">
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="cont-reg">
+				<div class="overlap"></div>
+				<div class="login">
+					<i id="close-reg" class="fa fa-exit" onclick="closeLogin()"></i>
+					<div class="title-login-reg">Create account</div>
+					<div class="content-login">
+						<form action="" method="POST">
+							<input class="input" 	id="r-user"  		name="username" placeholder="Username" type="text" value="">
+							<input class="input" 	id="r-lastname" 	name="lastname" placeholder="Lastname" type="text" value="">
+							<input class="input" 	id="r-name"  		name="name" placeholder="Name" type="text" value="">
+							<input class="input" 	id="r-address"  	name="address" placeholder="Address" type="text" value="">
+							<input class="input" 	id="r-email"  		name="email" placeholder="Email" type="text" value="">
+							<input class="input" 	id="r-password" 	name="password" placeholder="Password" type="password" value="">
+							<input class="input" 	id="r-rpassword" 	name="rpassword" placeholder="Reenter Password" type="password" value="">
+							<input class="input" 	id="r-op" 			name="op"		type="hidden" value="createAccount">
+							<input class="button" 	id="r-ok-reg"  		type="submit" value="CREATE">
+						</form>
+					</div>
+				</div>
+			</div>
+			{% if fail.res == 2 %}
+				<div class="fail"> {{fail.mess}} </div>
+			{% elif fail.res == 1 %}
+			<div class="ok-mess"><div class="mess"> ddd{{fail.mess}} </div></div>
+			{% endif %}
+			{% if fail.res < 2 %}
+				{% block content %}
+				{% endblock %}
+			{% endif %}
+		</section>
+		<div id="footer" class="footer">
+            <div class="footer-table">
+                <div class="row">
+                    <div class="col-1">
+                        <h4>Pages</h4>
+                        <ul>
+                            <li><a href="#"  rel="noreferrer">About us</a>
+                            </li>
+                            <li><a href="#"  rel="noreferrer">Terms and conditions</a></li>
+                            <li><a href="#"  rel="noreferrer">FAQ</a></li>
+                            <li><a href="#"  rel="noreferrer">Contact us</a></li>
+                        </ul>
+                        <hr>
+                        <h4>User section</h4>
+                        <ul>
+                            <li><a href="#" onclick="openLogin()">Login</a>
+                            </li>
+                            <li><a href="#" onclick="openRegister()">Register</a>
+                            </li>
+                        </ul>
+                        <hr class="hidden-md hidden-lg hidden-sm">
+                    </div>
+                    <div class="col-2">
+                        <h4>Top categories</h4>
+                        <h5>Men</h5>
+                        <ul>
+                            <li><a href="category.html">T-shirts</a>
+                            </li>
+                            <li><a href="category.html">Shirts</a>
+                            </li>
+                            <li><a href="category.html">Accessories</a>
+                            </li>
+                        </ul>
+                        <h5>Ladies</h5>
+                        <ul>
+                            <li><a href="category.html">T-shirts</a>
+                            </li>
+                            <li><a href="category.html">Skirts</a>
+                            </li>
+                            <li><a href="category.html">Pants</a>
+                            </li>
+                            <li><a href="category.html">Accessories</a>
+                            </li>
+                        </ul>
+						<hr class="hidden-md hidden-lg">
+                    </div>
+                    <!-- /.col-md-3 -->
+                    <div class="col-3">
+                        <h4>Where to find us</h4>
+                        <p><strong>U-Shop</strong>
+                            <br> University of Bergamo
+                            <br> viale Marconi 5
+                            <br> 24044 Dalmine (BG)
+                            <br>
+                            <strong>Italy</strong>
+                        </p>
+                        <a href="contact.html">Go to contact page</a>
+                        <hr class="hidden-md hidden-lg">
+                    </div>
+                    <div class="col-4">
+                        <h4>Get the news</h4>
+                        <p class="text-muted">---</p>
+                        <form>
+                            <div class="input-group">
+                                <input type="text" class="input">
+                                <span class="input-group-btn">
+			    <input class="button" type="button" Value="Subscribe!"/>
+			</span>
+                            </div>
+                            <!-- /input-group -->
+                        </form>
+                        <hr>
+                        <h4>Stay in touch</h4>
+                        <p class="social">
+                            <a href="#" class="facebook external" data-animate-hover="shake"><i class="fa fa-facebook"></i></a>
+                            <a href="#" class="twitter external" data-animate-hover="shake"><i class="fa fa-twitter"></i></a>
+                            <a href="#" class="instagram external" data-animate-hover="shake"><i class="fa fa-instagram"></i></a>
+                            <a href="#" class="gplus external" data-animate-hover="shake"><i class="fa fa-google-plus"></i></a>
+                            <a href="#" class="email external" data-animate-hover="shake"><i class="fa fa-envelope"></i></a>
+                        </p>
+
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                </div>
+            </div>
+        </div>
+	</div>
+
+		{% load static %}
+		<script src="{% static 'js/jquery-3.1.1.min.js' %}" type="text/javascript"></script>
+		<script src="{% static 'js/utility.js' %}" type="text/javascript"></script>
+	</body>
+</html>

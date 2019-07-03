@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load ecomm_extras %}
+{% load static %}
+	{% block content %}
+			<div class="content-products">
+				<div class="search">
+					<input id="search"  placeholder="Search" type="text" value="">
+					<button id="search-button" type="submit" class="btn btn-search" onclick="filter()"><i class="fa fa-search"></i></button>
+				</div>
+				<div class="category">
+					<ul class="list-category"> <!-- onclick="send('index.html', {'op':'filter','cat':'All','tags':''},'GET')" -->
+						<li id="all-cat" ><a href="index.html" rel="noreferrer">All Departments</a></li>
+						{% for cat in cats %}
+							<li id="{{cat.fields.Name}}" onclick="send('index.html', {'op':'filter','cat':'{{cat.fields.Name|urlencode}}','tags':''},'GET')"><a>{{cat.fields.Name}}</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+				<div class="products">
+					{% if prods|length > 0 %}
+						{% for prod in prods %}
+						{% if forloop.counter0|divisibleby:"4" %}
+						<div class="row">
+						{% endif %}
+							<div class="col-{{forloop.counter0|modulo:4}}" id="prd_{{prod.pk}}">
+								<div class="img-prd" onclick="location.href='product.html?op=product&id={{prod.pk}}'">
+									{% with 'img/'|add:prod.fields.PictureProductName as image_static %}
+										<img class="img" src="{% static image_static %}/1.jpg" />
+									{% endwith %}
+								</div>
+								<div class="tlt-prd">{{ prod.fields.NameProduct }}</div>
+								<div class="desc-prd">
+									{{ prod.fields.Desc|truncatechars:50  }}
+								</div>
+								<div class="prs-prd">
+									{{user.currency.symbol}} {{ prod.fields.Price }}
+								</div>
+								<div class="chartProd"><i class="fa fa-shopping-cart" id="addBasket" onclick="addBasket({{prod.pk}})"></i><i class="fa fa-heart"></i></div>
+							</div>
+						{% if forloop.last or forloop.counter|divisibleby:"4" %}
+						</div>
+						{% endif %}
+						{% endfor %}
+					{% else %}
+						<div class="fail"> NO ITEM FOUND </div>
+					{% endif %}
+				</div>
+				{% if n_el > 1 %}
+				<div class="n_el">
+					{% with ''|center:n_el as range %}
+					{% for _ in range %}
+						<input class="number_list {% if forloop.counter == page.n_page %} selected {% endif %}" type="button" value="{{forloop.counter}}" onclick="location.href='index.html?{{page.query_filter}}&page={{forloop.counter}}'">
+					{% endfor %}
+					{% endwith %}
+				</div>
+					{% endif %}
+			</div>
+	{% endblock %}

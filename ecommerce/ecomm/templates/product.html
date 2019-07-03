@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load ecomm_extras %}
+{% load static %}
+	{% block content %}
+			<div class="content-product">
+				{% with 'img/'|add:prods.0.fields.PictureProductName as image_static %}
+				<div class="lists-img">
+					{% with ''|center:4 as range %}
+					{% for _ in range %}
+					<div class="list-img" onmouseover="setPrdImg(this)">
+							<img class="el-img" src="{% static image_static %}/{{forloop.counter}}.jpg" />
+					</div>
+					{% endfor %}
+					{% endwith %}
+				</div>
+				<div class="prd-img-big">
+					<div class="prd-img">
+							<img class="img-big" src="{% static image_static %}/4.jpg" />
+					</div>
+				</div>
+				{% endwith %}
+				<div class="prd">
+					<div class="prd-name" id="prd-name">{{prods.0.fields.NameProduct}}</div>
+					<div style="margin-top:1%">
+                        <div style="float:left; margin:0 1%">Price: </div><div class="prd-price  {% if prods.0.fields.Price > "0" %} sale {% endif %} id="prd-price">{{user.currency.symbol}}{{prods.0.fields.Price}}</div>
+                        {% if prods.0.fields.Price > "0" %}
+                        <div class="prd-sale" id="prd-sale" > {{prods.0.fields.Sale}}%</div>
+                        <div class="tot-prd">{{user.currency.symbol}}{{tot|floatformat:2}}</div>
+                        {% endif %}
+                </div>
+					<div class="prd-subtitle" id="prd-subtitle">{{prods.0.fields.Subtitle}}</div>
+					<div class="prd-desc" id="prd-desc">{{prods.0.fields.Desc|linebreaks}}</div>
+					<div class="prd-info" id="prd-info">{{prods.0.fields.Info|linebreaks}}</div>
+					<div  class="prd-basket">
+						<div class="qty">
+							<input id="qty" type="number" value="" placeholder="Quantity">
+						</div>
+						<div class="add-basket" id="prd-addBasket">
+							<i class="fas fa fa-shopping-cart" onclick="addBasket('{{prods.0.pk}}')"><span style="margin-left:1%">Add To Basket</span></i>
+						</div>
+					</div>
+				</div>
+			</div>
+	{% endblock %}

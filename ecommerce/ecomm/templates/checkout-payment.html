@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load ecomm_extras %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static '.\css\checkout.css' %}">
+
+<div>
+   <div class="box">
+      <h1>Checkout - Payment</h1>
+      <ul class="nav nav-pills nav-justified">
+         <li class="active"><a href="/checkout-address.html"><i class="fa fa-map-marker"></i><br>Address</a></li>
+         <li class="active"><a href=""><i class="fa fa-money disabled"></i><br>Payment Method</a></li>
+         <li class="disabled"><a href="#"><i class="fa fa-eye disabled"></i><br><span class="disabled">Order Review</span></a></li>
+      </ul>
+      <div class="content">
+		<div class="check-row">
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="type">Card Type</label>
+                  <select style="width:40%; margin-right:10px" class="form-control" id="type">
+						<option value="01">Mastercard</option>
+						<option value="02">Visa</option>
+						<option value="03">American Express</option>
+					</select>
+               </div>
+            </div>
+		 </div>
+         <div class="check-row">
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="card">Card Number</label>
+                  <input type="text" class="form-control" id="card">
+               </div>
+            </div>
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="name">Name on card</label>
+                  <input type="text" class="form-control" id="name"">
+               </div>
+            </div>
+         </div>
+         <!-- /.row -->
+         <div class="check-row">
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="Expiration">Expiration date</label>
+				  <div style="display:flex;"> 
+					  <select style="width:40%; margin-right:10px" class="form-control" id="expiration_mounth">
+						<option value="01">01</option>
+						<option value="02">02</option>
+						<option value="03">03</option>
+						<option value="04">04</option>
+						<option value="05">05</option>
+						<option value="06">06</option>
+						<option value="07">07</option>
+						<option value="08">08</option>
+						<option value="08">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+					</select>
+					<select style="width:55%;  margin-right:10px" class="form-control" id="expiration_year">
+						<option value="2019">2019</option>
+						<option value="2021">2021</option>
+						<option value="2022">2022</option>
+						<option value="2023">2023</option>
+					</select>
+				</div>
+               </div>
+            </div>
+            <div class="check-col-sm-6">
+               <div class="form-group">
+                  <label for="cvc">CVC</label>
+                  <input type="text" class="form-control" id="cvc" >
+               </div>
+            </div>
+         </div>
+         <!-- /.row -->
+      </div>
+   </div>
+   <!-- right box -->
+   <div class="col-md-3">
+      <div class="box" id="order-summary">
+         <div class="box-header">
+            <h3>Order summary</h3>
+         </div>
+         <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+         <div class="table-responsive">
+            <table class="table">
+               <tbody>
+                  <tr>
+                     <td>Order subtotal</td>
+                     <th>{{user.currency.symbol}}{{user.subtotal_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr>
+                     <td>Tax</td>
+                     <th>{{user.currency.symbol}}{{user.tax_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr>
+                     <td>Shipping and handling</td>
+                     <th>{{user.currency.symbol}}{{user.shipping_basket|floatformat:2}}</th>
+                  </tr>
+                  <tr class="total">
+                     <td>Total</td>
+                     <th>{{user.currency.symbol}}{{user.total_basket|floatformat:2}}</th>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+   </div>
+   <div class="box-footer">
+      <div class="left">
+         <button type="buttom" class="button" id="checkout-address" onclick="location.href='/checkout-address.html'"><i class="fa fa-arrow-circle-left"></i> Back to Checkout</button>
+      </div>
+      <div class="right">
+         <button type="buttom" class="button" id="checkout-review"  onclick="location.href='/checkout-review.html'">Continue to Order Review<i class="fa fa-arrow-circle-right"></i>
+         </button>
+      </div>
+   </div>
+</div>
+{% endblock %}
